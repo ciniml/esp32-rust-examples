@@ -1,0 +1,20 @@
+[package]
+authors = ["Kenta IDA"]
+name = "rust_main"
+version = "0.0.0"
+edition = "2018"
+
+[lib]
+crate-type = ["staticlib"]
+
+[profile.dev]
+lto = true 
+incremental = false
+debug = false
+codegen-units = 1
+
+[profile.release]
+lto = true
+incremental = false
+debug = false
+codegen-units = 1
