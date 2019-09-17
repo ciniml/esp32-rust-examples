@@ -1,18 +1,12 @@
 #![no_std]
-#![feature(lang_items, alloc_error_handler)]
+#![feature(lang_items, core_intrinsics)]
 
 // panic handler
+use core::intrinsics;
 use core::panic::PanicInfo;
 #[lang = "panic_impl"]
-#[no_mangle]
-pub extern fn rust_begin_panic(_info: &PanicInfo) -> ! {
-    loop {}
-}
-// Global allocator
-use core::alloc::Layout;
-#[alloc_error_handler]
-fn on_oom(_layout: Layout) -> ! {
-    loop {}
+extern fn rust_begin_panic(_info: &PanicInfo) -> ! {
+    unsafe { intrinsics::abort() }
 }
 
 // write function in standard C library
