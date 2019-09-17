@@ -8,6 +8,7 @@ use core::panic::PanicInfo;
 pub extern fn rust_begin_panic(_info: &PanicInfo) -> ! {
     loop {}
 }
+// Global allocator
 use core::alloc::Layout;
 #[alloc_error_handler]
 fn on_oom(_layout: Layout) -> ! {
