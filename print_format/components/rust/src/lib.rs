@@ -15,18 +15,21 @@ extern "C" {
 }
 
 // Stdout struct 
-use core::fmt;
-use core::fmt::Write;
-struct Stdout;
 impl fmt::Write for Stdout {
     // Implement write_str to write out a formatted string to stdout.
     fn write_str(&mut self, s: &str) -> fmt::Result {
         unsafe {
             let buffer = s.as_bytes();
-            if write(0, buffer.as_ptr(), buffer.len()) > 0 {
-                Ok(())
-            } else {
-                Err(()).map_err(|_| fmt::Error)
+            let mut offset = 0;
+            loop {
+                let bytes_written = write(0, buffer[offset..].as_ptr(), buffer.len() - offset);
+                if bytes_written < 0 {
+                    return Err(()).map_err(|_| fmt::Error);
+                }
+                offset += bytes_written;
+                if( offset == buffer.len() ) {
+                    return Ok(())
+                }
             }
         }
     }
