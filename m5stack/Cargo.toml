@@ -1,0 +1,12 @@
+[package]
+authors = ["Kenta IDA"]
+name = "m5stack"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+idf = {path = "../idf"}
+freertos_rs = {"../freertos.rs"}
+peripheral = {path = "../peripheral"}
+embedded-hal = {version="0.2.3", features=["unproven"]}
+embedded-graphics = {version="0.5.2", default-features=false}
