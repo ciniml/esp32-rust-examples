@@ -102,37 +102,6 @@ use peripheral::*;
 
 #[no_mangle]
 pub extern fn rust_main() {
-    print!("Hello from Rust!\n");
-    print!("Hello formatted from {}\n", "Rust");
-
-    let i2c_internal = I2cPort::new_master(I2cPortNumber::Port0).unwrap();
-    let config = I2cConfig {
-        mode: I2cMode::Master,
-        sda_io: GpioPin21,
-        scl_io: GpioPin22,
-        sda_pullup_en: GpioPullUp::Enable,
-        scl_pullup_en: GpioPullUp::Enable,
-        clk_speed: 400000,
-        addr_10bit_en: false,
-        slave_addr: 0,
-    };
-    i2c_internal.lock(Duration::ms(10)).and_then(|mut i2c| i2c.config(config)).unwrap();
-
-    print!("I2C scan begins...\n");
-
-    for device_address in 0..0x7f {
-        let mut command = I2cCommandLink::new();
-        let result = command.start()
-            .and_then(|c| { c.write_byte(device_address << 1, true)})
-            .and_then(|c| { c.stop()});
-        if let Ok(_) = result {
-            let result = i2c_internal.lock(Duration::ms(10)).and_then(|mut i2c| i2c.cmd_begin(command, Duration::ms(10)));
-            if let Ok(_) = result {
-                print_fmt(format_args!("Addr {:X} found\n", device_address));
-            };
-        }
-    };
-    
     #[repr(u8)]
     #[derive(Copy, Clone, Debug)]
     enum ButtonName {
