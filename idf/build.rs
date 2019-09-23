@@ -8,6 +8,7 @@ use walkdir::WalkDir;
 fn main() {
     let idf_components_path = PathBuf::from(env::var("IDF_PATH").unwrap()).join("components");
     let xtensa_toolchain_path = PathBuf::from(env::var("XTENSA_TOOLCHAIN_ROOT").unwrap());
+    let project_build_include_path = PathBuf::from(env::var("PROJECT_BUILD_INCLUDE_PATH").unwrap());
     let mut include_paths = Vec::new();
     for entry in WalkDir::new(idf_components_path.to_str().unwrap()).into_iter().filter_map(|e| e.ok()) {
         if entry.file_name() == "include" {
@@ -23,7 +24,7 @@ fn main() {
         .clang_arg("-I".to_owned() + xtensa_toolchain_path.clone().join("lib").join("gcc").join("xtensa-esp32-elf").join("5.2.0").join("include-fixed").to_str().unwrap())
         .clang_arg("-I".to_owned() + idf_components_path.clone().join("newlib").join("platform_include").to_str().unwrap())
         .clang_arg("-I".to_owned() + idf_components_path.clone().join("lwip").join("include").join("apps").to_str().unwrap())
-        .clang_arg("-I../../../build/include")
+        .clang_arg("-I".to_owned() + project_build_include_path.clone().to_str().unwrap())
         .use_core()
         .disable_untagged_union()
         .generate_comments(false)
