@@ -1,0 +1,7 @@
+[build]
+target = "xtensa-esp32-none-elf"
+
+[target.xtensa-esp32-none-elf]
+rustflags = [
+    "-C", "save-temps",
+]

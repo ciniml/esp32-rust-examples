@@ -1,0 +1,34 @@
+[package]
+authors = ["Kenta IDA"]
+name = "rust_main"
+version = "0.0.0"
+edition = "2018"
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+rand = { version = "0.6.0", default-features = false }
+embedded-hal = { version = "0.2" }
+embedded-graphics = {version="0.5.1", default-features=false}
+
+idf = { path = "../../../idf" }
+freertos_rs = { path = "../../../freertos.rs" }
+peripheral = { path = "../../../peripheral" }
+m5stack = { path = "../../../m5stack" }
+
+[build-dependencies]
+bindgen = "0.51.0"
+walkdir = "2"
+
+[profile.dev]
+lto = true 
+incremental = false
+debug = false
+codegen-units = 1
+
+[profile.release]
+lto = true
+incremental = false
+debug = false
+codegen-units = 1
