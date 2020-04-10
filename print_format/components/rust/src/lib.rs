@@ -15,6 +15,9 @@ extern "C" {
 }
 
 // Stdout struct 
+use core::fmt;
+use core::fmt::Write;
+struct Stdout;
 impl fmt::Write for Stdout {
     // Implement write_str to write out a formatted string to stdout.
     fn write_str(&mut self, s: &str) -> fmt::Result {
