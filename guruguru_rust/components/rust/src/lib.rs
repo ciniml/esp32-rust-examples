@@ -118,7 +118,7 @@ pub extern fn rust_main() {
 
     let queue = Arc::new( Queue::<ButtonEvent>::new(32).unwrap() );
     let queueDrawTask = queue.clone();
-    let _drawTask = Task::new().name("line task").stack_size(4096).core(1).start(move || {
+    let _drawTask = Task::new().name("line task").stack_size(8192).core(1).start(move || {
         unsafe { esp_task_wdt_add(ptr::null_mut()); }
 
         let spi_bus_config = SpiBusConfig {
@@ -130,7 +130,7 @@ pub extern fn rust_main() {
             max_transfer_size: 320*4,
         };
         print!("SPI Config: {:#?}\n", spi_bus_config);
-        let mut spi_bus = SpiBus::new(SpiHostDevice::Vspi, spi_bus_config, 1).unwrap();
+        let mut spi_bus = SpiBus::new(SpiHostDevice::Spi2, spi_bus_config, 1).unwrap();
         print!("Initializing LCD...\n");
         let mut display = Lcd::new(&mut spi_bus, GpioPin14, GpioPin27, GpioPin33, GpioPin32).unwrap();
         display.reset().unwrap();

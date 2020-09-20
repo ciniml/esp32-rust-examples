@@ -137,7 +137,7 @@ impl Lcd {
     pub fn new(bus: &mut SpiBus, pin_cs: GpioPin, pin_dc: GpioPin, pin_rst: GpioPin, pin_bl: GpioPin) -> Result<Lcd, LcdError> {
         let spi_device_config = SpiDeviceInterfaceConfig {
             cs_pin: Some(pin_cs),
-            clock_speed_hz: 40000000,
+            clock_speed_hz: 20000000,
             ..Default::default()
         };
         let mut dc = pin_dc.normal();

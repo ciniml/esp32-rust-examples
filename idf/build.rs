@@ -11,6 +11,13 @@ fn main() {
     let project_build_include_path = PathBuf::from(env::var("PROJECT_BUILD_INCLUDE_PATH").unwrap());
     let mut include_paths = Vec::new();
     for entry in WalkDir::new(idf_components_path.to_str().unwrap()).into_iter().filter_map(|e| e.ok()) {
+        if let Some(parent) = entry.path().parent() {
+            if let Some(file_name) = parent.file_name() {
+                if file_name == "newlib" || file_name == "lwip" {
+                    continue;
+                }
+            }
+        }
         if entry.file_name() == "include" {
             include_paths.push("-I".to_owned() + entry.path().to_str().unwrap());
         }
@@ -20,12 +27,16 @@ fn main() {
         .clang_arg("-nostdinc")
         .clang_args(include_paths)
         .clang_arg("-I".to_owned() + xtensa_toolchain_path.clone().join("xtensa-esp32-elf").join("include").to_str().unwrap())
-        .clang_arg("-I".to_owned() + xtensa_toolchain_path.clone().join("lib").join("gcc").join("xtensa-esp32-elf").join("5.2.0").join("include").to_str().unwrap())
-        .clang_arg("-I".to_owned() + xtensa_toolchain_path.clone().join("lib").join("gcc").join("xtensa-esp32-elf").join("5.2.0").join("include-fixed").to_str().unwrap())
+        .clang_arg("-I".to_owned() + xtensa_toolchain_path.clone().join("lib").join("gcc").join("xtensa-esp32-elf").join("8.2.0").join("include").to_str().unwrap())
+        .clang_arg("-I".to_owned() + xtensa_toolchain_path.clone().join("lib").join("gcc").join("xtensa-esp32-elf").join("8.2.0").join("include-fixed").to_str().unwrap())
         .clang_arg("-I".to_owned() + idf_components_path.clone().join("newlib").join("platform_include").to_str().unwrap())
         .clang_arg("-I".to_owned() + idf_components_path.clone().join("lwip").join("include").join("apps").to_str().unwrap())
+        .clang_arg("-I".to_owned() + idf_components_path.clone().join("lwip").join("include").join("apps").join("sntp").to_str().unwrap())
+        .clang_arg("-I".to_owned() + idf_components_path.clone().join("lwip").join("lwip").join("src").join("include").to_str().unwrap())
+        .clang_arg("-I".to_owned() + idf_components_path.clone().join("lwip").join("port").join("esp32").join("include").to_str().unwrap())
         .clang_arg("-I".to_owned() + project_build_include_path.clone().to_str().unwrap())
         .use_core()
+        .ctypes_prefix("cty")
         .disable_untagged_union()
         .generate_comments(false)
         .rustfmt_bindings(true)

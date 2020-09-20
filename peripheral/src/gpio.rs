@@ -193,14 +193,14 @@ impl NormalGpio {
         unsafe{ idf::gpio_config(&idf_config).as_result() }
     }
     pub fn reset(&mut self) -> Result<(), IdfError> {
-        unsafe{ idf::gpio_reset_pin(self.number).as_result() }
+        unsafe{ idf::gpio_reset_pin(self.number as i32).as_result() }
     }
     pub fn set_level(&mut self, level_high: bool) -> Result<(), IdfError> {
         let idf_level = if level_high { 1 as u32 } else { 0 as u32 };
-        unsafe { idf::gpio_set_level(self.number, idf_level).as_result() }
+        unsafe { idf::gpio_set_level(self.number as i32, idf_level).as_result() }
     }
     pub fn get_level(&self) -> Result<bool, IdfError> {
-        Ok( unsafe { idf::gpio_get_level(self.number) != 0 } )
+        Ok( unsafe { idf::gpio_get_level(self.number as i32) != 0 } )
     }
     pub fn to_v1(self) -> NormalGpioV1 {
         NormalGpioV1::new(self)

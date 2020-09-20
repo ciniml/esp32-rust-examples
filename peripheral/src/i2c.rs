@@ -4,10 +4,10 @@
 use core::convert::Into;
 use core::marker::{Sync, PhantomData};
 use core::mem::zeroed;
+use cty::*;
 
 use idf;
 use idf::AsResult;
-use idf::std::os::raw::*;
 use idf::IdfError;
 
 use freertos_rs::*;
@@ -224,7 +224,7 @@ impl<'cmdlink> I2cCommandLink<'cmdlink> {
     }
     pub fn write(&mut self, data: &'cmdlink [u8], ack_en: bool) -> Result<&mut Self, I2cError> {
         unsafe {
-            idf::i2c_master_write(self.handle, data.as_ptr() as *mut u8, data.len(), ack_en).as_result()?;
+            idf::i2c_master_write(self.handle, data.as_ptr() as *mut u8, data.len() as u32, ack_en).as_result()?;
         }
         Ok(self)
     }
@@ -236,7 +236,7 @@ impl<'cmdlink> I2cCommandLink<'cmdlink> {
     }
     pub fn read(&mut self, data: &'cmdlink mut [u8], ack_type: I2cAckType) -> Result<&mut Self, I2cError> {
         unsafe {
-            idf::i2c_master_read(self.handle, data.as_mut_ptr(), data.len(), ack_type.into()).as_result()?;
+            idf::i2c_master_read(self.handle, data.as_mut_ptr(), data.len() as u32, ack_type.into()).as_result()?;
         }
         Ok(self)
     }

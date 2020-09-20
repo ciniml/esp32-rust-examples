@@ -18,7 +18,7 @@ peripheral = { path = "../../../peripheral" }
 m5stack = { path = "../../../m5stack" }
 
 [build-dependencies]
-bindgen = "0.51.0"
+bindgen = "0.55.1"
 walkdir = "2"
 
 [profile.dev]

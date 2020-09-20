@@ -12,7 +12,7 @@ use alloc::boxed::Box;
 
 use idf;
 use idf::AsResult;
-use idf::std::os::raw::*;
+use cty::*;
 use idf::IdfError;
 
 use freertos_rs::*;
@@ -33,17 +33,17 @@ pub struct SpiBus {
 
 #[derive(Copy, Clone, Debug)]
 pub enum SpiHostDevice {
-    Spi,
-    Hspi,
-    Vspi,
+    Spi1,
+    Spi2,
+    Spi3,
 }
 
 impl Into<idf::spi_host_device_t> for SpiHostDevice {
     fn into(self) -> idf::spi_host_device_t {
         match self {
-            SpiHostDevice::Spi => idf::spi_host_device_t_SPI_HOST,
-            SpiHostDevice::Hspi => idf::spi_host_device_t_HSPI_HOST,
-            SpiHostDevice::Vspi => idf::spi_host_device_t_VSPI_HOST,
+            SpiHostDevice::Spi1 => idf::spi_host_device_t_SPI1_HOST,
+            SpiHostDevice::Spi2 => idf::spi_host_device_t_SPI2_HOST,
+            SpiHostDevice::Spi3 => idf::spi_host_device_t_SPI3_HOST,
         }
     }
 }
@@ -279,8 +279,8 @@ impl<TTransactionContext> SpiDevice<TTransactionContext> {
         
         unsafe {
             let mut idf_transaction = idf::spi_transaction_t::default();
-            idf_transaction.length   = transaction.length as usize;
-            idf_transaction.rxlength = transaction.rxlength.map_or(0, |v| v);
+            idf_transaction.length   = transaction.length as u32;
+            idf_transaction.rxlength = transaction.rxlength.map_or(0, |v| v as u32);
             idf_transaction.cmd      = transaction.cmd;
             idf_transaction.addr     = transaction.addr;
 
